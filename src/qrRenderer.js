@@ -43,22 +43,29 @@ export async function renderQrToCanvas(canvas, { url, logoSrc, size, logoRatio =
   const logoSize = Math.round(size * logoRatio)
   const pad = Math.round(logoSize * padding)
   const boxSize = logoSize + pad * 2
-  const x = Math.round((size - boxSize) / 2)
-  const y = Math.round((size - boxSize) / 2)
+  const cx = size / 2
+  const cy = size / 2
+  const radius = boxSize / 2
 
+  ctx.save()
+  ctx.beginPath()
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2)
+  ctx.closePath()
   ctx.fillStyle = '#ffffff'
-  ctx.fillRect(x, y, boxSize, boxSize)
+  ctx.fill()
+  ctx.clip()
 
-  const { dw, dh } = fitContain(img.width, img.height, logoSize, logoSize)
-  const dx = x + pad + Math.round((logoSize - dw) / 2)
-  const dy = y + pad + Math.round((logoSize - dh) / 2)
+  const { dw, dh } = fitCover(img.width, img.height, boxSize, boxSize)
+  const dx = cx - dw / 2
+  const dy = cy - dh / 2
   ctx.imageSmoothingQuality = 'high'
   ctx.drawImage(img, dx, dy, dw, dh)
+  ctx.restore()
 }
 
-function fitContain(sw, sh, maxW, maxH) {
-  const ratio = Math.min(maxW / sw, maxH / sh)
-  return { dw: Math.round(sw * ratio), dh: Math.round(sh * ratio) }
+function fitCover(sw, sh, maxW, maxH) {
+  const ratio = Math.max(maxW / sw, maxH / sh)
+  return { dw: sw * ratio, dh: sh * ratio }
 }
 
 export async function downloadQrPng(filename, opts) {
