@@ -163,21 +163,17 @@
   border-radius: 14px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
+  box-sizing: border-box;
+  width: 452px;
+  max-width: 100%;
 }
 
 .canvas-frame canvas {
   display: block;
-  width: 420px;
-  height: 420px;
-  max-width: 100%;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
   border-radius: 4px;
-}
-
-@media (max-width: 480px) {
-  .canvas-frame canvas {
-    width: 320px;
-    height: 320px;
-  }
 }
 
 .download {
